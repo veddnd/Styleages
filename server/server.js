@@ -9,7 +9,9 @@ const OpenAI = require("openai");
 // });
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: "*"
+}));
 app.use(express.json());
 
 app.post("/analyze", async (req, res) => {
@@ -192,25 +194,25 @@ const axios = require("axios");
 // });
 
 app.post("/generate", async (req, res) => {
-  const { styles, prompt } = req.body;
+    const { styles, prompt } = req.body;
 
-  try {
-    const fullPrompt = `
+    try {
+        const fullPrompt = `
 ${prompt} poster, modern design,
 colors ${styles.colors.slice(0, 3).join(", ")},
 clean layout, high quality
 `;
 
-    const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(fullPrompt)}`;
+        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(fullPrompt)}`;
 
-    res.json({
-      image: imageUrl
-    });
+        res.json({
+            image: imageUrl
+        });
 
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ error: "Image generation failed" });
-  }
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ error: "Image generation failed" });
+    }
 });
 
 app.listen(5000, () => console.log("Server running on 5000"));
