@@ -1,0 +1,13 @@
+{
+    "manifest_version": 3,
+    "name": "Style Analyzer",
+    "version": "1.0",
+    "description": "Analyze website styles instantly",
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "permissions": [
+        "activeTab",
+        "scripting"
+    ]
+}
