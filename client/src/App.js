@@ -12,10 +12,12 @@ function App() {
 
   // ✅ Get styles from Chrome Extension
   useEffect(() => {
-    const stored = localStorage.getItem("styles");
+    const params = new URLSearchParams(window.location.search);
+    const stylesParam = params.get("styles");
 
-    if (stored) {
-      setData(JSON.parse(stored));
+    if (stylesParam) {
+      const parsed = JSON.parse(decodeURIComponent(stylesParam));
+      setData(parsed);
     } else {
       setError("No styles found. Please use the Chrome extension.");
     }

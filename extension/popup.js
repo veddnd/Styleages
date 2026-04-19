@@ -34,18 +34,10 @@ document.getElementById("analyzeBtn").addEventListener("click", async () => {
 
     const styles = results[0].result;
 
-    console.log("Extracted styles:", styles); // 🔍 DEBUG
+    // 🔥 Pass data via URL
+    const encoded = encodeURIComponent(JSON.stringify(styles));
 
-    // 🔥 Save in localStorage of NEW TAB (IMPORTANT FIX)
     chrome.tabs.create({
-        url: "https://styleages.vercel.app",
-    }, (newTab) => {
-        chrome.scripting.executeScript({
-            target: { tabId: newTab.id },
-            func: (data) => {
-                localStorage.setItem("styles", JSON.stringify(data));
-            },
-            args: [styles]
-        });
+        url: `https://styleages.vercel.app/?styles=${encoded}`
     });
 });
