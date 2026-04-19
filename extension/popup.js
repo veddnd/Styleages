@@ -34,10 +34,18 @@ document.getElementById("analyzeBtn").addEventListener("click", async () => {
 
     const styles = results[0].result;
 
-    // store in localStorage
-    localStorage.setItem("styles", JSON.stringify(styles));
+    console.log("Extracted styles:", styles); // 🔍 DEBUG
 
-    // redirect to your deployed frontend
-    const url = `https://styleages.vercel.app`;
-    chrome.tabs.create({ url });
+    // 🔥 Save in localStorage of NEW TAB (IMPORTANT FIX)
+    chrome.tabs.create({
+        url: "https://styleages.vercel.app",
+    }, (newTab) => {
+        chrome.scripting.executeScript({
+            target: { tabId: newTab.id },
+            func: (data) => {
+                localStorage.setItem("styles", JSON.stringify(data));
+            },
+            args: [styles]
+        });
+    });
 });
