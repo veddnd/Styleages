@@ -4,7 +4,7 @@ document.getElementById("analyzeBtn").addEventListener("click", async () => {
   const url = tab.url;
 
   // Redirect to your React app with URL as query param
-  const redirectUrl = `http://localhost:3000/?url=${encodeURIComponent(url)}`;
+  const redirectUrl = `https://styleages.vercel.app//?url=${encodeURIComponent(url)}`;
 
   chrome.tabs.create({ url: redirectUrl });
 });
