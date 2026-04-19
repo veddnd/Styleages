@@ -1,45 +1,25 @@
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
 
 function App() {
-  const [url, setUrl] = useState("");
   const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const [prompt, setPrompt] = useState("");
   const [image, setImage] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
 
+  // ✅ Get styles from Chrome Extension
   useEffect(() => {
-  const params = new URLSearchParams(window.location.search);
-  const extractedUrl = params.get("url");
+    const stored = localStorage.getItem("styles");
 
-  if (extractedUrl) {
-    setUrl(extractedUrl);
-  }
-}, []);
-
-  // 🔍 Analyze Website
-  const analyze = async () => {
-    if (!url) return;
-
-    setLoading(true);
-    setError("");
-    setData(null);
-    setImage("");
-
-    try {
-      const res = await axios.post("http://localhost:5000/analyze", { url });
-      setData(res.data);
-    } catch (err) {
-      setError("Failed to analyze. Try another URL.");
+    if (stored) {
+      setData(JSON.parse(stored));
+    } else {
+      setError("No styles found. Please use the Chrome extension.");
     }
-
-    setLoading(false);
-  };
+  }, []);
 
   // 🎨 Generate Image
   const generate = async () => {
@@ -47,12 +27,16 @@ function App() {
 
     setAiLoading(true);
     setImage("");
+    setError("");
 
     try {
-      const res = await axios.post("http://localhost:5000/generate", {
-        styles: data,
-        prompt,
-      });
+      const res = await axios.post(
+        "https://styleages.onrender.com/generate", // 🔥 replace with your real backend URL
+        {
+          styles: data,
+          prompt,
+        }
+      );
 
       setImage(res.data.image);
     } catch (err) {
@@ -61,25 +45,12 @@ function App() {
 
     setAiLoading(false);
   };
-  
 
   return (
     <div className="container">
       <h1>Style Analyzer</h1>
 
-      {/* URL Input */}
-      <div className="input-box">
-        <input
-          type="text"
-          placeholder="Enter website URL"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-        />
-        <button onClick={analyze}>Analyze</button>
-      </div>
-
-      {/* Loading & Error */}
-      {loading && <p>Analyzing website...</p>}
+      {/* Error */}
       {error && <p className="error">{error}</p>}
 
       {/* Results */}
@@ -122,12 +93,13 @@ function App() {
           {image && (
             <div className="ai-box">
               <h3>🖼 Generated Poster</h3>
-              {/* <img src={image} alt="Generated Poster" className="generated-img" /> */}
               <img
                 src={image}
                 alt="Generated Poster"
                 className="generated-img"
-                onError={() => console.log("Image failed to load:", image)}
+                onError={() =>
+                  console.log("Image failed to load:", image)
+                }
               />
             </div>
           )}
