@@ -117,17 +117,13 @@ app.post("/analyze", async (req, res) => {
         res.json(data);
 
     } catch (err) {
-        console.error("SCRAPE ERROR:", err.message);
+    console.error("SCRAPE ERROR FULL:", err);
 
-        if (browser) await browser.close();
-
-        // fallback (VERY IMPORTANT for demo)
-        res.json({
-            colors: ["#000000", "#ffffff", "#ff0000"],
-            fonts: ["Arial", "sans-serif"],
-            note: "Fallback due to scraping restrictions"
-        });
-    }
+    res.status(500).json({
+        error: "Scraping failed",
+        message: err.message
+    });
+}
 });
 
 app.post("/generate", async (req, res) => {
