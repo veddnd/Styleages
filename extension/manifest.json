@@ -2,6 +2,7 @@
     "manifest_version": 3,
     "name": "Style Analyzer",
     "version": "1.0",
+    "description": "Analyze website styles instantly",
     "permissions": [
         "activeTab",
         "scripting"
